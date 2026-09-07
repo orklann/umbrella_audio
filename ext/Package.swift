@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
   name: "audiotee",
   platforms: [
-    .macOS("14.2")
+    .macOS("14.0")
   ],
   products: [
     // Library that can be imported by other packages
