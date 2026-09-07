@@ -17,8 +17,6 @@ public func AudioTeeStop(
     audio.stop()
 }
 
-@_cdecl
-
 @_cdecl("audiotee_start")
 public func AudioTeeStart(
     includePids: UnsafePointer<Int32>?,
