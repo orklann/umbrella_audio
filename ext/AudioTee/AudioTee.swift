@@ -1,4 +1,3 @@
-```swift
 import AudioTeeCore
 import CoreAudio
 import Foundation
@@ -306,4 +305,3 @@ extension ExitCode {
     }
   }
 }
-```
