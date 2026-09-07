@@ -251,10 +251,10 @@ final class AudioTee {
       "Stopping AudioTee..."
     )
 
+    shouldStop = true
+
     // Stop the run loop so run() can exit.
     CFRunLoopStop(CFRunLoopGetMain())
-
-    shouldStop = true
 
     // Stop the recorder immediately if one is active.
     recorder?.stopRecording()
