@@ -33,8 +33,8 @@ public func AudioTeeStart(
     let rate: Double? = hasSampleRate ? sampleRate : nil
 
 
+    let audio = AuidoTee()
     do {
-        let audio = AuidoTee()
         try audio.run_main(
             includeProcesses: includes,
             excludeProcesses: excludes,
