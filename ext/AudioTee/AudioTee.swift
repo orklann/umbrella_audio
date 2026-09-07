@@ -12,7 +12,6 @@ final class AudioTee {
 
   // Keep the recorder so stop() can stop it.
   private var recorder: AudioRecorder?
-  private var shouldStop = false
 
   init() {}
 
@@ -221,10 +220,6 @@ final class AudioTee {
     try recorder.startRecording()
 
     while true {
-      if shouldStop {
-        break
-      }
-
       let result = CFRunLoopRunInMode(
         CFRunLoopMode.defaultMode,
         0.1,
@@ -250,8 +245,6 @@ final class AudioTee {
     AudioTeeLogging.logger.info(
       "Stopping AudioTee..."
     )
-
-    shouldStop = true
 
     // Stop the run loop so run() can exit.
     CFRunLoopStop(CFRunLoopGetMain())

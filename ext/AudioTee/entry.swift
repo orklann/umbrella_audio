@@ -13,7 +13,6 @@ public func audiotee_stop(_ handle: UnsafeMutableRawPointer?) {
         .takeUnretainedValue()
 
     audioTee.stop()
-    print("stop done")
 }
 
 @_cdecl("audiotee_start")

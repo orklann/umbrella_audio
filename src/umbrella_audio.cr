@@ -49,7 +49,6 @@ module UmbrellaAudio
     end
 
     def stop
-      puts "start audio stop>>>"
       handle = @handle
 
       return unless handle
