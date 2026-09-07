@@ -6,15 +6,11 @@ import Foundation
 public func AudioTeeStop(
     _ handle: UnsafeMutableRawPointer?
 ) {
-    guard let handle else {
-        return
-    }
-
-    let audio = Unmanaged<AudioTee>
+    let audioTee = Unmanaged<AudioTee>
         .fromOpaque(handle)
-        .takeRetainedValue()
+        .takeUnretainedValue()
 
-    audio.stop()
+    audioTee.stop()
 }
 
 @_cdecl("audiotee_start")
