@@ -2,8 +2,44 @@ import AudioTeeCore
 import AudioToolbox
 import Foundation
 
-public func AudioTeeStart() {
-    AudioTee.main()
+@_cdecl("audiotee_start")
+public func AudioTeeStart(
+    includePids: UnsafePointer<Int32>?,
+    includeCount: Int,
+    excludePids: UnsafePointer<Int32>?,
+    excludeCount: Int,
+    mute: Bool,
+    stereo: Bool,
+    sampleRate: Double,       // Pass 0.0 or negative to represent 'nil'
+    hasSampleRate: Bool,      // Or use a boolean flag for optionality
+    chunkDuration: Double
+) {
+    // Reconstruct Swift arrays from C pointers
+    let includes: [Int32]
+    if let ptr = includePids, includeCount > 0 {
+        includes = Array(UnsafeBufferPointer(start: ptr, count: includeCount))
+    } else {
+        includes = []
+    }
+
+    let excludes: [Int32]
+    if let ptr = excludePids, excludeCount > 0 {
+        excludes = Array(UnsafeBufferPointer(start: ptr, count: excludeCount))
+    } else {
+        excludes = []
+    }
+
+    // Reconstruct Swift optional Double
+    let rate: Double? = hasSampleRate ? sampleRate : nil
+
+    AudioTee().run_main(
+        includeProcesses: includes,
+        excludeProcesses: excludes,
+        mute: mute,
+        stereo: stereo,
+        sampleRate: rate,
+        chunkDuration: chunkDuration
+    )
 }
 
 @_cdecl("audiotee_test")
