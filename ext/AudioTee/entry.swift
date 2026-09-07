@@ -32,7 +32,7 @@ public func AudioTeeStart(
     // Reconstruct Swift optional Double
     let rate: Double? = hasSampleRate ? sampleRate : nil
 
-    AudioTee().run_main(
+    try AudioTee().run_main(
         includeProcesses: includes,
         excludeProcesses: excludes,
         mute: mute,
