@@ -45,7 +45,8 @@ public func AudioTeeStart(
     } catch {
 
     }
-    return audio
+
+    return Unmanaged.passRetained(audio).toOpaque()
 }
 
 @_cdecl("audiotee_test")
