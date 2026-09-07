@@ -29,7 +29,7 @@ module UmbrellaAudio
       chunk_duration : Float64 = 0.5
     )
       # Pass .to_unsafe for array pointers, and track if sample_rate is present
-      status = Native.audiotee_start(
+      Native.audiotee_start(
         include_pids.to_unsafe,
         include_pids.size,
         exclude_pids.to_unsafe,
@@ -40,8 +40,6 @@ module UmbrellaAudio
         !sample_rate.nil?,
         chunk_duration
       )
-
-      raise "AudioTee failed with status code #{status}" unless status == 0
     end
   end
 end
