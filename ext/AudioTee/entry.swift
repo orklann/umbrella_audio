@@ -3,9 +3,11 @@ import AudioToolbox
 import Foundation
 
 @_cdecl("audiotee_stop")
-public func AudioTeeStop(
-    _ handle: UnsafeMutableRawPointer?
-) {
+public func audiotee_stop(_ handle: UnsafeMutableRawPointer?) {
+    guard let handle = handle else {
+        return
+    }
+
     let audioTee = Unmanaged<AudioTee>
         .fromOpaque(handle)
         .takeUnretainedValue()
