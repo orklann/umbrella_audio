@@ -39,7 +39,9 @@ public func AudioTeeStart(
         stereo: stereo,
         sampleRate: rate,
         chunkDuration: chunkDuration
-    )
+    ) catch {
+
+    }
 }
 
 @_cdecl("audiotee_test")
