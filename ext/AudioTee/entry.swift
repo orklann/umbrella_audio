@@ -38,8 +38,8 @@ public func AudioTeeStart(
         mute: mute,
         stereo: stereo,
         sampleRate: rate,
-        chunkDuration: chunkDuration
-    ) catch {
+        chunkDuration: chunkDuration) 
+    catch {
 
     }
 }
