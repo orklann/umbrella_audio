@@ -11,7 +11,7 @@ lib Native
       sample_rate : Float64,
       has_sample_rate : Bool,
       chunk_duration : Float64
-    ) : Void
+    ) : Void*
 end
 
 module UmbrellaAudio

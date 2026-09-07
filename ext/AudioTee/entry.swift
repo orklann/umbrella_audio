@@ -13,7 +13,7 @@ public func AudioTeeStart(
     sampleRate: Double,       // Pass 0.0 or negative to represent 'nil'
     hasSampleRate: Bool,      // Or use a boolean flag for optionality
     chunkDuration: Double
-) {
+) -> UnsafeMutableRawPointer?  {
     // Reconstruct Swift arrays from C pointers
     let includes: [Int32]
     if let ptr = includePids, includeCount > 0 {
@@ -34,7 +34,8 @@ public func AudioTeeStart(
 
 
     do {
-        try AudioTee().run_main(
+        let audio = AuidoTee()
+        try audio.run_main(
             includeProcesses: includes,
             excludeProcesses: excludes,
             mute: mute,
@@ -44,6 +45,7 @@ public func AudioTeeStart(
     } catch {
 
     }
+    return audio
 }
 
 @_cdecl("audiotee_test")
