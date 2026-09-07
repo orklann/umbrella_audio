@@ -1,14 +1,18 @@
+```swift
 import AudioTeeCore
 import CoreAudio
 import Foundation
 
-struct AudioTee {
+final class AudioTee {
   var includeProcesses: [Int32] = []
   var excludeProcesses: [Int32] = []
   var mute: Bool = false
   var stereo: Bool = false
   var sampleRate: Double?
   var chunkDuration: Double = 0.2
+
+  // Keep the recorder so stop() can stop it.
+  private var recorder: AudioRecorder?
 
   init() {}
 
@@ -35,27 +39,31 @@ struct AudioTee {
         """
     )
 
-    // Configure arguments
     parser.addArrayOption(
       name: "include-processes",
       help: "Process IDs to include (space-separated, empty = all processes)"
     )
+
     parser.addArrayOption(
       name: "exclude-processes",
       help: "Process IDs to exclude (space-separated)"
     )
+
     parser.addFlag(
       name: "mute",
       help: "Mute processes being tapped"
     )
+
     parser.addFlag(
       name: "stereo",
       help: "Records in stereo"
     )
+
     parser.addOption(
       name: "sample-rate",
       help: "Target sample rate (8000, 16000, 22050, 24000, 32000, 44100, 48000)"
     )
+
     parser.addOption(
       name: "chunk-duration",
       help: "Audio chunk duration in seconds",
@@ -65,7 +73,6 @@ struct AudioTee {
     do {
       try parser.parse()
 
-      // Extract arguments
       let includeProcesses = try parser.getArrayValue(
         "include-processes",
         as: Int32.self
@@ -89,7 +96,6 @@ struct AudioTee {
         as: Double.self
       )
 
-      // Pass all parameters to run_main()
       try AudioTee().run_main(
         includeProcesses: includeProcesses,
         excludeProcesses: excludeProcesses,
@@ -126,21 +132,15 @@ struct AudioTee {
     sampleRate: Double?,
     chunkDuration: Double
   ) throws {
-    // Create AudioTee using the parameters passed from main()
-    var audioTee = AudioTee()
+    self.includeProcesses = includeProcesses
+    self.excludeProcesses = excludeProcesses
+    self.mute = mute
+    self.stereo = stereo
+    self.sampleRate = sampleRate
+    self.chunkDuration = chunkDuration
 
-    audioTee.includeProcesses = includeProcesses
-    audioTee.excludeProcesses = excludeProcesses
-    audioTee.mute = mute
-    audioTee.stereo = stereo
-    audioTee.sampleRate = sampleRate
-    audioTee.chunkDuration = chunkDuration
-
-    // Validate
-    try audioTee.validate()
-
-    // Run
-    try audioTee.run()
+    try validate()
+    try run()
   }
 
   func validate() throws {
@@ -215,6 +215,9 @@ struct AudioTee {
       chunkDuration: chunkDuration
     )
 
+    // Store the recorder so stop() can access it.
+    self.recorder = recorder
+
     try recorder.startRecording()
 
     while true {
@@ -231,7 +234,24 @@ struct AudioTee {
     }
 
     AudioTeeLogging.logger.info("Shutting down...")
+
     recorder.stopRecording()
+
+    // Release the recorder after stopping.
+    self.recorder = nil
+  }
+
+  /// Stops the current recording.
+  func stop() {
+    AudioTeeLogging.logger.info(
+      "Stopping AudioTee..."
+    )
+
+    // Stop the run loop so run() can exit.
+    CFRunLoopStop(CFRunLoopGetMain())
+
+    // Stop the recorder immediately if one is active.
+    recorder?.stopRecording()
   }
 
   private func setupSignalHandlers() {
@@ -239,6 +259,7 @@ struct AudioTee {
       AudioTeeLogging.logger.info(
         "Received SIGINT, initiating graceful shutdown..."
       )
+
       CFRunLoopStop(CFRunLoopGetMain())
     }
 
@@ -246,6 +267,7 @@ struct AudioTee {
       AudioTeeLogging.logger.info(
         "Received SIGTERM, initiating graceful shutdown..."
       )
+
       CFRunLoopStop(CFRunLoopGetMain())
     }
   }
@@ -284,3 +306,4 @@ extension ExitCode {
     }
   }
 }
+```
