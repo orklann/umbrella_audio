@@ -12,12 +12,15 @@ lib Native
       has_sample_rate : Bool,
       chunk_duration : Float64
     ) : Void*
+  fun audiotee_stop(handle : Void*) : Void
 end
 
 module UmbrellaAudio
   class UmbrellaAudio
-    def initialize
+    @handle : Void*?
 
+    def initialize
+      @handle = nil
     end
 
     def start(
@@ -28,8 +31,9 @@ module UmbrellaAudio
       sample_rate : Float64? = nil,
       chunk_duration : Float64 = 0.5
     )
+      return if @handle
       # Pass .to_unsafe for array pointers, and track if sample_rate is present
-      Native.audiotee_start(
+      handle = Native.audiotee_start(
         include_pids.to_unsafe,
         include_pids.size,
         exclude_pids.to_unsafe,
@@ -40,6 +44,18 @@ module UmbrellaAudio
         !sample_rate.nil?,
         chunk_duration
       )
+
+      @handle = handle
+    end
+
+    def stop
+      handle = @handle
+
+      return unless handle
+
+      Native.audiotee_stop(handle)
+
+      @handle = nil
     end
   end
 end

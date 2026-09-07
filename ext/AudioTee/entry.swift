@@ -2,6 +2,23 @@ import AudioTeeCore
 import AudioToolbox
 import Foundation
 
+@_cdecl("audiotee_stop")
+public func AudioTeeStop(
+    _ handle: UnsafeMutableRawPointer?
+) {
+    guard let handle else {
+        return
+    }
+
+    let audio = Unmanaged<AudioTee>
+        .fromOpaque(handle)
+        .takeRetainedValue()
+
+    audio.stop()
+}
+
+@_cdecl
+
 @_cdecl("audiotee_start")
 public func AudioTeeStart(
     includePids: UnsafePointer<Int32>?,
