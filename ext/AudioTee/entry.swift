@@ -1,11 +1,88 @@
 import AudioTeeCore
 import AudioToolbox
 import Foundation
-import AVFoundation
+
+final class SystemAudioPermission {
+
+    private let service = "kTCCServiceAudioCapture" as CFString
+
+    private typealias TCCAccessPreflight =
+        @convention(c) (CFString, CFDictionary?) -> Int32
+
+    private typealias TCCAccessRequest =
+        @convention(c) (
+            CFString,
+            CFDictionary?,
+            @escaping (Bool) -> Void
+        ) -> Void
+
+    private func tccFunction<T>(
+        _ name: String,
+        _ type: T.Type
+    ) -> T? {
+        guard let handle = dlopen(
+            "/System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC",
+            RTLD_NOW
+        ) else {
+            return nil
+        }
+
+        guard let symbol = dlsym(handle, name) else {
+            dlclose(handle)
+            return nil
+        }
+
+        return unsafeBitCast(symbol, to: T.self)
+    }
+
+    func isAuthorized() -> Bool {
+        guard let preflight = tccFunction(
+            "TCCAccessPreflight",
+            TCCAccessPreflight.self
+        ) else {
+            return false
+        }
+
+        let status = preflight(service, nil)
+
+        // 0 = authorized
+        // 1 = denied
+        // 2 = not determined
+        return status == 0
+    }
+
+    func request(completion: @escaping (Bool) -> Void) {
+        guard let request = tccFunction(
+            "TCCAccessRequest",
+            TCCAccessRequest.self
+        ) else {
+            completion(false)
+            return
+        }
+
+        request(service, nil) { granted in
+            DispatchQueue.main.async {
+                completion(granted)
+            }
+        }
+    }
+}
 
 @_cdecl("audiotee_permission_request")
 public func audiotee_permission_request() {
-    print("Persmission request done!")
+    let permission = SystemAudioPermission()
+    if permission.isAuthorized() {
+        startAudioCLI()
+        return
+    }
+
+    permission.request { granted in
+        if granted {
+            print("Auido recording permission granted!")
+        } else {
+            print("Fale to grant Auido recording permission!")
+        }
+    }
 }
 
 @_cdecl("audiotee_stop")
