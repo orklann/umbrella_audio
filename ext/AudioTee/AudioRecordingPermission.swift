@@ -2,7 +2,6 @@ import SwiftUI
 import Observation
 import OSLog
 
-#define ENABLE_TCC_SPI
 
 private let kAppSubsystem = "me.pixelegg.AudioTee"
 
@@ -20,20 +19,15 @@ final class AudioRecordingPermission {
     private(set) var status: Status = .unknown
 
     init() {
-        #if ENABLE_TCC_SPI
         NotificationCenter.default.addObserver(forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
             guard let self else { return }
             self.updateStatus()
         }
 
         updateStatus()
-        #else
-        status = .authorized
-        #endif // ENABLE_TCC_SPI
     }
 
     func request() {
-        #if ENABLE_TCC_SPI
         logger.debug(#function)
 
         guard let request = Self.requestSPI else {
@@ -54,11 +48,9 @@ final class AudioRecordingPermission {
                 }
             }
         }
-        #endif // ENABLE_TCC_SPI
     }
 
     private func updateStatus() {
-        #if ENABLE_TCC_SPI
         logger.debug(#function)
 
         guard let preflight = Self.preflightSPI else {
@@ -75,10 +67,8 @@ final class AudioRecordingPermission {
         } else {
             status = .unknown
         }
-        #endif // ENABLE_TCC_SPI
     }
 
-    #if ENABLE_TCC_SPI
     private typealias PreflightFuncType = @convention(c) (CFString, CFDictionary?) -> Int
     private typealias RequestFuncType = @convention(c) (CFString, CFDictionary?, @escaping (Bool) -> Void) -> Void
 
@@ -125,5 +115,4 @@ final class AudioRecordingPermission {
 
         return fn
     }()
-    #endif // ENABLE_TCC_SPI
 }
