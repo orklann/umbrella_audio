@@ -2,6 +2,8 @@ import SwiftUI
 import Observation
 import OSLog
 
+#define ENABLE_TCC_SPI
+
 private let kAppSubsystem = "me.pixelegg.AudioTee"
 
 /// Uses TCC SPI in order to check/request system audio recording permission.
