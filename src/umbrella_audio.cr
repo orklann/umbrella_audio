@@ -1,5 +1,6 @@
 @[Link(ldflags: "-L#{__DIR__}/../ext/dist/release -lAudioTee -framework AudioToolbox -framework CoreAudio -framework Foundation")]
 lib Native
+  fun audiotee_permission_request(Void) : Void
   fun audiotee_test : Void
   fun audiotee_start(
       include_pids : Int32*,
@@ -21,6 +22,10 @@ module UmbrellaAudio
 
     def initialize
       @handle = nil
+    end
+
+    def request_permission
+      Native.audiotee_permission_request()
     end
 
     def start(

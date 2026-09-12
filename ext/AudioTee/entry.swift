@@ -2,6 +2,12 @@ import AudioTeeCore
 import AudioToolbox
 import Foundation
 
+@_cdecl("audiotee_permission_request")
+public func audiotee_permission_request() {
+    let request = AudioRecordingPermission()
+    request.request()
+}
+
 @_cdecl("audiotee_stop")
 public func audiotee_stop(_ handle: UnsafeMutableRawPointer?) {
     guard let handle = handle else {
