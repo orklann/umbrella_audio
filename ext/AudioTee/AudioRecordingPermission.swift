@@ -2,6 +2,8 @@ import SwiftUI
 import Observation
 import OSLog
 
+private let kAppSubsystem = "me.pixelegg.AudioTee"
+
 /// Uses TCC SPI in order to check/request system audio recording permission.
 @Observable
 final class AudioRecordingPermission {
