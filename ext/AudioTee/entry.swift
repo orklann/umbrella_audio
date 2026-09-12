@@ -71,10 +71,10 @@ final class SystemAudioPermission {
 @_cdecl("audiotee_permission_request")
 public func audiotee_permission_request() {
     let permission = SystemAudioPermission()
-    if permission.isAuthorized() {
+    /*if permission.isAuthorized() {
         print("Authorized!")
         return
-    }
+    }*/
 
     permission.request { granted in
         if granted {
