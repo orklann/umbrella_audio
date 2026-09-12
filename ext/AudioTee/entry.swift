@@ -72,7 +72,6 @@ final class SystemAudioPermission {
 public func audiotee_permission_request() {
     let permission = SystemAudioPermission()
     if permission.isAuthorized() {
-        startAudioCLI()
         return
     }
 
