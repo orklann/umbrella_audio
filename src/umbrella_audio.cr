@@ -1,4 +1,4 @@
-@[Link(ldflags: "-L#{__DIR__}/../ext/dist/release -lAudioTee -framework AudioToolbox -framework CoreAudio -framework Foundation")]
+@[Link(ldflags: "-L#{__DIR__}/../ext/dist/release -lAudioTee -framework AudioToolbox -framework CoreAudio -framework AVFoundation -framework Foundation")]
 lib Native
   fun audiotee_permission_request : Void
   fun audiotee_test : Void

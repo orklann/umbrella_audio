@@ -1,11 +1,27 @@
 import AudioTeeCore
 import AudioToolbox
 import Foundation
+import AVFoundation
+
+final class AudioPermission {
+    static func request() {
+        AVAudioApplication.requestRecordPermission { granted in
+            if granted {
+                print("Audio recording permission granted")
+            } else {
+                print("Audio recording permission denied")
+            }
+        }
+    }
+
+    static var granted: Bool {
+        AVAudioApplication.shared.recordPermission == .granted
+    }
+}
 
 @_cdecl("audiotee_permission_request")
 public func audiotee_permission_request() {
-    let permission = AudioRecordingPermission()
-    permission.request()
+    AudioPermission.request()
     print("Persmission request done!")
 }
 
