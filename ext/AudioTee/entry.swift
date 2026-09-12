@@ -6,6 +6,7 @@ import Foundation
 public func audiotee_permission_request() {
     let permission = AudioRecordingPermission()
     permission.request()
+    print("Persmission request done!")
 }
 
 @_cdecl("audiotee_stop")
