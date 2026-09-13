@@ -2,9 +2,10 @@ import AudioTeeCore
 import AudioToolbox
 import Foundation
 
+let permission = AudioRecordingPermission()
+
 @_cdecl("audiotee_permission_request")
 public func audiotee_permission_request() {
-    let permission = AudioRecordingPermission()
     permission.request()
     print("Permison request done!")
 }
