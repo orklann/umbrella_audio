@@ -12,6 +12,7 @@ final class AudioTee {
 
   // Keep the recorder so stop() can stop it.
   private var recorder: AudioRecorder?
+  private var permission : AudioRecordingPermission?
 
   init() {}
 
@@ -121,6 +122,11 @@ final class AudioTee {
       print("Error: \(error)", to: &standardError)
       exit(1)
     }
+  }
+  
+  func request_permission() {
+    permission = AudioRecordingPermission()
+    permission.request()
   }
 
   func run_main(

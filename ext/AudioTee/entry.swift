@@ -6,7 +6,8 @@ let permission = AudioRecordingPermission()
 
 @_cdecl("audiotee_permission_request")
 public func audiotee_permission_request() {
-    permission.request()
+    let audiotee = AudioTee()
+    audiotee.request_permission()
     print("Permison request done!")
 }
 
