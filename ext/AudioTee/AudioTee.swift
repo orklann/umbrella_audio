@@ -126,7 +126,7 @@ final class AudioTee {
   
   func request_permission() {
     permission = AudioRecordingPermission()
-    permission.request()
+    permission!.request()
   }
 
   func run_main(
