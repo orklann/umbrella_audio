@@ -2,6 +2,7 @@
 lib Native
   fun audiotee_permission_request : Void
   fun audiotee_test : Void
+  fun audiotee_main : Void
   fun audiotee_start(
       include_pids : Int32*,
       include_count : LibC::SizeT,
@@ -26,6 +27,10 @@ module UmbrellaAudio
 
     def request_permission
       Native.audiotee_permission_request()
+    end
+
+    def main
+      Native.audiotee_main()
     end
 
     def start(

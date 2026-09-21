@@ -4,6 +4,11 @@ import Foundation
 
 let permission = AudioRecordingPermission()
 
+@_cdecl("audiotee_main")
+public func audiotee_main() {
+    AudioTee.main()
+}
+
 @_cdecl("audiotee_permission_request")
 public func audiotee_permission_request() {
     let audiotee = AudioTee()
