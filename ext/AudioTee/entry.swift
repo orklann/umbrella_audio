@@ -9,7 +9,7 @@ let permission = AudioRecordingPermission()
 public func umbrella_audio_has_permission() -> Bool {
     guard let perm = permission else { return false }
     // Check if authorized, or if it matches your audio-only status string
-    return perm.status == "authorized"
+    return perm.status.rawValue == "authorized"
 }
 
 @_cdecl("audiotee_main")
