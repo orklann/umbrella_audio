@@ -46,7 +46,7 @@ module UmbrellaAudio
         media_type_audio = LibFoundation.string_with_units("soun".to_unsafe) # or use objective-c runtime
 
         # Using Crystal's pointer execution or standard Objective-C dispatch:
-        status = LibAV.authorizationStatusForMediaType(pointer_to_av_media_type)
+        status = Native.authorizationStatusForMediaType(pointer_to_av_media_type)
       rescue
         # Fallback or handle non-macOS platforms gracefully
       end
