@@ -4,6 +4,15 @@ import Foundation
 
 let permission = AudioRecordingPermission()
 
+@_cdecl("umbrella_audio_get_authorization_status")
+public func umbrella_audio_get_authorization_status() -> Int32 {
+    if #available(macOS 10.14, *) {
+        let status = AVCaptureDevice.authorizationStatus(for: .audio)
+        return Int32(status.rawValue)
+    }
+    return 3 // Authorized by default for older versions
+}
+
 @_cdecl("audiotee_main")
 public func audiotee_main() {
     AudioTee.main()
