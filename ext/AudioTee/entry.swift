@@ -1,6 +1,7 @@
 import AudioTeeCore
 import AudioToolbox
 import Foundation
+import AVFoundation
 
 let permission = AudioRecordingPermission()
 
