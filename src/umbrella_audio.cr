@@ -1,13 +1,6 @@
 @[Link(ldflags: "-L#{__DIR__}/../ext/dist/release -lAudioTee -framework AudioToolbox -framework CoreAudio -framework AVFoundation -framework Foundation")]
 lib Native
-  type AVCaptureDevice = Void*
-  type NSString = Void*
-  fun authorizationStatusForMediaType = "AVCaptureDevice_authorizationStatusForMediaType"(mediaType : NSString) : Int32
-  # AVAuthorizationStatus:
-  # 0: NotDetermined
-  # 1: Restricted
-  # 2: Denied
-  # 3: Authorized
+  fun umbrella_audio_get_authorization_status : Int32
 
   fun audiotee_permission_request : Void
   fun audiotee_test : Void
@@ -35,23 +28,7 @@ module UmbrellaAudio
     end
 
     def has_permission? : Bool
-      # AVMediaTypeAudio is "soun" / "audi" -> actually "soun" is for CoreAudio, but AVMediaTypeAudio maps to "soun" or CFString.
-      # Alternatively, we can pass the string "soun" or use a standard Cocoa approach.
-      # Let's use the runtime to call AVCaptureDevice authorization status safely:
-
-      status = 0 # Default to restricted/denied if bindings fail
-      begin
-        # In Obj-C: [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio]
-        # AVMediaTypeAudio constant value is @"soun"
-        media_type_audio = LibFoundation.string_with_units("soun".to_unsafe) # or use objective-c runtime
-
-        # Using Crystal's pointer execution or standard Objective-C dispatch:
-        status = Native.authorizationStatusForMediaType(pointer_to_av_media_type)
-      rescue
-        # Fallback or handle non-macOS platforms gracefully
-      end
-
-      status == 3 # 3 corresponds to AVAuthorizationStatusAuthorized
+      Native.umbrella_audio_get_authorization_status == 3
     end
 
     def request_permission
