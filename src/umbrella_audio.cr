@@ -1,6 +1,6 @@
 @[Link(ldflags: "-L#{__DIR__}/../ext/dist/release -lAudioTee -framework AudioToolbox -framework CoreAudio -framework AVFoundation -framework Foundation")]
 lib Native
-  fun umbrella_audio_get_authorization_status : Int32
+  fun umbrella_audio_has_permission : Bool
 
   fun audiotee_permission_request : Void
   fun audiotee_test : Void
@@ -28,7 +28,7 @@ module UmbrellaAudio
     end
 
     def has_permission? : Bool
-      Native.umbrella_audio_get_authorization_status == 3
+      Native.umbrella_audio_has_permission
     end
 
     def request_permission

@@ -5,13 +5,11 @@ import AVFoundation
 
 let permission = AudioRecordingPermission()
 
-@_cdecl("umbrella_audio_get_authorization_status")
-public func umbrella_audio_get_authorization_status() -> Int32 {
-    if #available(macOS 10.14, *) {
-        let status = AVCaptureDevice.authorizationStatus(for: .audio)
-        return Int32(status.rawValue)
-    }
-    return 3 // Authorized by default for older versions
+@_cdecl("umbrella_audio_has_permission")
+public func umbrella_audio_has_permission() -> Bool {
+    guard let perm = permission else { return false }
+    // Check if authorized, or if it matches your audio-only status string
+    return perm.status == "authorized"
 }
 
 @_cdecl("audiotee_main")
